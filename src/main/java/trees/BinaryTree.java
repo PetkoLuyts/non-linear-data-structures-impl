@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class BinaryTree<E> {
-    BinaryNode<E> root;
+    private BinaryNode<E> root;
     private static class BinaryNode<E> {
         private E value;
         private BinaryNode left;
