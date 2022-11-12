@@ -14,5 +14,7 @@ public class Main {
         bst.insert(40);
 
         bst.preOrder(bst.root);
+        System.out.println();
+        bst.inOrder(bst.root);
     }
 }
