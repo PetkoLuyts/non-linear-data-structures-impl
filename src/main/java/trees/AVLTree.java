@@ -162,4 +162,73 @@ public class AVLTree {
     public void insert(int value) {
         root = insertNode(root, value);
     }
+
+    public static BinaryNode minimumNode(BinaryNode root) {
+        if (root.left == null) {
+            return root;
+        }
+
+        return minimumNode(root.left);
+    }
+
+    public BinaryNode deleteNode(BinaryNode node, int value) {
+        if (node == null) {
+            System.out.println("Value not found in AVL tree");
+            return node;
+        }
+
+        if (value < node.value) {
+            node.left = deleteNode(node.left, value);
+        } else if (value > node.value) {
+            node.right = deleteNode(node.right, value);
+        } else {                            // value found
+            if (node.left != null && node.right != null) {
+                BinaryNode temp = node;
+                BinaryNode minNodeForRight = minimumNode(temp.right);
+                node.value = minNodeForRight.value;
+                node.right = deleteNode(node.right, minNodeForRight.value);
+            } else if (node.left != null) {
+                node = node.left;
+            } else if (node.right != null) {
+                node = node.right;
+            } else {
+                node = null;
+            }
+        }
+
+        int balance = getBalance(node);
+
+        // LL
+        if (balance > 1 && getBalance(node.left) >= 0) {
+            return rotateRight(node);
+        }
+
+        // LR
+        if (balance > 1 && getBalance(node.left) < 0) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
+        }
+
+        // RR
+        if (balance < -1 && getBalance(node.right) <= 0) {
+            return rotateLeft(node);
+        }
+
+        // RL
+        if (balance < -1 && getBalance(node.right) > 0) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
+        }
+
+        return node;
+    }
+
+    public void delete(int value) {
+        root = deleteNode(root, value);
+    }
+
+    public void deleteAVL() {
+        root = null;
+        System.out.println("The AVL tree has been successfully deleted!");
+    }
 }
