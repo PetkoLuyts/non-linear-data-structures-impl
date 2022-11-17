@@ -11,6 +11,10 @@ public class AVLTree {
         public int height;
         public BinaryNode left;
         public BinaryNode right;
+
+        public BinaryNode() {
+            this.height = 0;
+        }
     }
 
     public AVLTree() {
@@ -76,5 +80,86 @@ public class AVLTree {
         } else {
             return search(node.right, value);
         }
+    }
+
+    public int getHeight(BinaryNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return node.height;
+    }
+
+    private BinaryNode rotateRight(BinaryNode imbalancedNode) {
+        BinaryNode newRoot = imbalancedNode.left;
+        imbalancedNode.left = imbalancedNode.left.right;
+        newRoot.right = imbalancedNode;
+        imbalancedNode.height = 1 + Math.max(getHeight(imbalancedNode.left), getHeight(imbalancedNode.right));
+        newRoot.height = 1 + Math.max(getHeight(newRoot.left), getHeight(newRoot.right));
+
+        return newRoot;
+    }
+    
+    private BinaryNode rotateLeft(BinaryNode imbalancedNode) {
+        BinaryNode newRoot = imbalancedNode.right;
+        imbalancedNode.right = imbalancedNode.right.left;
+        newRoot.left = imbalancedNode;
+        imbalancedNode.height = 1 + Math.max(getHeight(imbalancedNode.left), getHeight(imbalancedNode.right));
+        newRoot.height = 1 + Math.max(getHeight(newRoot.left), getHeight(newRoot.right));
+
+        return newRoot;
+    }
+
+    public int getBalance(BinaryNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return getHeight(node.left) - getHeight(node.right);
+    }
+
+    private BinaryNode insertNode(BinaryNode node, int nodeValue) {
+        if (node == null) {
+            BinaryNode newNode = new BinaryNode();
+            newNode.value = nodeValue;
+            newNode.height = 1;
+
+            return newNode;
+        } else if (nodeValue < node.value) {
+            node.left = insertNode(node.left, nodeValue);
+        } else {
+            node.right = insertNode(node.right, nodeValue);
+        }
+
+        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+        int balance = getBalance(node);
+
+        // LL
+        if (balance > 1 && nodeValue < node.left.value) {
+            return rotateRight(node);
+        }
+
+        // LR
+        if (balance > 1 && nodeValue > node.left.value) {
+            node.left = rotateLeft(node.left);
+            return rotateRight(node);
+        }
+
+        // RR
+        if (balance < -1 && nodeValue > node.right.value) {
+            return rotateLeft(node);
+        }
+
+        // RL
+        if (balance < -1 && nodeValue < node.right.value) {
+            node.right = rotateRight(node.right);
+            return rotateLeft(node);
+        }
+
+        return node;
+    }
+
+    public void insert(int value) {
+        root = insertNode(root, value);
     }
 }
