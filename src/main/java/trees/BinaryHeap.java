@@ -70,4 +70,80 @@ public class BinaryHeap {
 
         System.out.println("Inserted " + value + " successfully in Heap");
     }
+
+    public void heapifyTopToBottom(int index, String heapType) {
+        int left = index * 2;
+        int right = index * 2 + 1;
+        int swapChild = 0;
+
+        if (sizeOfTree < left) {
+            return;
+        }
+
+        if (heapType.equals("Max")) {
+            if (sizeOfTree == left) {
+                if (arr[index] < arr[left]) {
+                    int tmp = arr[index];
+                    arr[index] = arr[left];
+                    arr[left] = tmp;
+                }
+
+                return;
+            } else {
+                if (arr[left] > arr[right]) {
+                    swapChild = left;
+                } else {
+                    swapChild = right;
+                }
+
+                if (arr[index] < arr[swapChild]) {
+                    int tmp = arr[index];
+                    arr[index] = arr[swapChild];
+                    arr[swapChild] = tmp;
+                }
+            }
+        } else if (heapType.equals("Min")) {
+            if (sizeOfTree == left) {
+                if (arr[index] > arr[left]) {
+                    int tmp = arr[index];
+                    arr[index] = arr[left];
+                    arr[left] = tmp;
+                }
+
+                return;
+            } else {
+                if (arr[left] < arr[right]) {
+                    swapChild = left;
+                } else {
+                    swapChild = right;
+                }
+
+                if (arr[index] > arr[swapChild]) {
+                    int tmp = arr[index];
+                    arr[index] = arr[swapChild];
+                    arr[swapChild] = tmp;
+                }
+            }
+        }
+
+        heapifyTopToBottom(swapChild, heapType);
+    }
+
+    public int extractHeadOfBinaryHeap(String heapType) {
+        if (isEmpty()) {
+            return -1;
+        } else {
+            int extractedValue = arr[1];
+            arr[1] = arr[sizeOfTree];
+            sizeOfTree--;
+            heapifyTopToBottom(1, heapType);
+
+            return extractedValue;
+        }
+    }
+
+    public void deleteBinaryHeap() {
+        arr = null;
+        System.out.println("The Binary Heap has been successfully deleted!");
+    }
 }
