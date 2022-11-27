@@ -1,6 +1,7 @@
 package graph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class GraphAdjacencyList {
     ArrayList<GraphNode> nodeList = new ArrayList<>();
@@ -8,6 +9,7 @@ public class GraphAdjacencyList {
     public static class GraphNode {
         public String name;
         public int index;
+        public boolean isVisited = false;
         public ArrayList<GraphNode> neighbours = new ArrayList<>();
 
         public GraphNode(String name, int index) {
@@ -44,5 +46,31 @@ public class GraphAdjacencyList {
         }
 
         return s.toString();
+    }
+
+    public void bfsVisit(GraphNode node) {
+        LinkedList<GraphNode> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            GraphNode currentNode = queue.remove(0);
+            currentNode.isVisited = true;
+            System.out.print(currentNode.name + " ");
+
+            for (GraphNode neighbour : currentNode.neighbours) {
+                if (!neighbour.isVisited) {
+                    queue.add(neighbour);
+                    neighbour.isVisited = true;
+                }
+            }
+        }
+    }
+
+    public void bfs() {
+        for (GraphNode node : nodeList) {
+            if (!node.isVisited) {
+                bfsVisit(node);
+            }
+        }
     }
 }
