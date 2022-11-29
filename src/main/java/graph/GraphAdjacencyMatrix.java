@@ -12,6 +12,7 @@ public class GraphAdjacencyMatrix {
         public String name;
         public int index;
         public boolean isVisited = false;
+        public GraphNode parent;
 
         public GraphNode(String name, int index) {
             this.name = name;
@@ -146,6 +147,36 @@ public class GraphAdjacencyMatrix {
 
         while (!stack.isEmpty()) {
             System.out.print(stack.pop().name + " ");
+        }
+    }
+
+    public static void pathPrint(GraphNode node) {
+        if (node.parent != null) {
+            pathPrint(node.parent);
+        }
+
+        System.out.print(node.name + " ");
+    }
+
+    public void BFSForSSSPP(GraphNode node) {
+        LinkedList<GraphNode> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            GraphNode currentNode = queue.remove(0);
+            currentNode.isVisited = true;
+            System.out.print("Printing path for node: " + currentNode.name + ": ");
+            pathPrint(currentNode);
+            System.out.println();
+            ArrayList<GraphNode> neighbours = getNeighbours(currentNode);
+
+            for (GraphNode neighbour : neighbours) {
+                if (!neighbour.isVisited) {
+                    queue.add(neighbour);
+                    neighbour.isVisited = true;
+                    neighbour.parent = currentNode;
+                }
+            }
         }
     }
 }
