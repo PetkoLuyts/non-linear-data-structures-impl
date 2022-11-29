@@ -117,4 +117,35 @@ public class GraphAdjacencyMatrix {
             }
         }
     }
+
+    public void addDirectedEdge(int i, int j) {
+        adjacencyMatrix[i][j] = 1;
+    }
+
+    public void topologicalVisit(GraphNode node, Stack<GraphNode> stack) {
+        ArrayList<GraphNode> neighbours = getNeighbours(node);
+
+        for (GraphNode neighbour : neighbours) {
+            if (!neighbour.isVisited) {
+                topologicalVisit(neighbour, stack);
+            }
+        }
+
+        node.isVisited = true;
+        stack.push(node);
+    }
+
+    public void topologicalSort() {
+        Stack<GraphNode> stack = new Stack<>();
+
+        for (GraphNode node : nodeList) {
+            if (!node.isVisited) {
+                topologicalVisit(node, stack);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            System.out.print(stack.pop().name + " ");
+        }
+    }
 }
