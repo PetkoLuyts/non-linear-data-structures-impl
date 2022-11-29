@@ -11,6 +11,7 @@ public class GraphAdjacencyList {
         public String name;
         public int index;
         public boolean isVisited = false;
+        public GraphNode parent;
         public ArrayList<GraphNode> neighbours = new ArrayList<>();
 
         public GraphNode(String name, int index) {
@@ -129,6 +130,35 @@ public class GraphAdjacencyList {
 
         while (!stack.isEmpty()) {
             System.out.print(stack.pop().name + " ");
+        }
+    }
+
+    public static void pathPrint(GraphNode node) {
+        if (node.parent != null) {
+            pathPrint(node.parent);
+        }
+
+        System.out.print(node.name + " ");
+    }
+
+    public void BFSForSSSPP(GraphNode node) {
+        LinkedList<GraphNode> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            GraphNode currentNode = queue.remove(0);
+            currentNode.isVisited = true;
+            System.out.print("Printing path for node: " + currentNode.name + ": ");
+            pathPrint(currentNode);
+            System.out.println();
+
+            for (GraphNode neighbour : currentNode.neighbours) {
+                if (!neighbour.isVisited) {
+                    queue.add(neighbour);
+                    neighbour.isVisited = true;
+                    neighbour.parent = currentNode;
+                }
+            }
         }
     }
 }
